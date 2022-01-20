@@ -1,0 +1,48 @@
+name: Testing workflow
+
+on: [push]
+
+jobs:
+  style_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install style checker"
+        run: pip install --user black
+      - name: "Run style check"
+        run: black --check .
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install dependencies"
+        run: python install pip & numpy & matplotlib & pytest & unittest & coverage
+      - name: "Run unittest"
+        run: python -m unittest
+      - name: "Run coverage"
+        run: coverage report -m
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: .coverage
+          retention-days: 1
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install dependencies"
+        run: python install coverage
+      - name: 'Download Artifact'
+        uses: actions/download-coverage@v2
+        with:
+          name: coverage
