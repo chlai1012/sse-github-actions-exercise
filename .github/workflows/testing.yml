@@ -16,13 +16,14 @@ jobs:
         run: black --check .
   test:
     runs-on: ubuntu-latest
+    needs: style_check
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8.10'
       - name: "Install dependencies"
-        run: python install pip & numpy & matplotlib & pytest & unittest & coverage
+        run: pip -user install numpy & matplotlib & pytest & unittest & coverage
       - name: "Run unittest"
         run: python -m unittest
       - name: "Run coverage"
@@ -35,6 +36,7 @@ jobs:
           retention-days: 1
   coverage:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
